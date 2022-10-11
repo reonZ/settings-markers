@@ -1,0 +1,25 @@
+{
+    "id": "settings-markers",
+    "title": "Settings Markers",
+    "author": "Idle",
+    "description": "This module adds 🌎 and 👤 markers to the settings window to help differentiate which ones are `client` or `world` settings.",
+    "authors": [
+        {
+            "name": "Idle",
+            "discord": "Idle#3251"
+        }
+    ],
+    "esmodules": ["scripts/main.js"],
+    "version": "1.0.0",
+    "compatibility": {
+        "minimum": "10",
+        "verified": "10"
+    },
+    "manifestPlusVersion": "1.2.0",
+    "url": "https://github.com/reonZ/settings-markers",
+    "readme": "https://github.com/reonZ/settings-markers/blob/master/README.md",
+    "manifest": "https://raw.githubusercontent.com/reonZ/settings-markers/master/module.json",
+    "download": "https://github.com/reonZ/settings-markers/releases/download/1.0.0/module.zip",
+    "changelog": "https://github.com/reonZ/settings-markers/releases",
+    "bugs": "https://github.com/reonZ/settings-markers/issues"
+}
