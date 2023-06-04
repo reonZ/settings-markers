@@ -16,21 +16,20 @@ Hooks.on('renderSettingsConfig', onRenderSettingsConfig)
 function onRenderSettingsConfig(_settings, html, data) {
     for (const category of data.categories) {
         const section = html.find(`section.category[data-category="${category.id}"]`)
-        for (const setting of category.settings) setGroupName(setting.name, setting.scope ?? 'client', section, false)
-        for (const menu of category.menus) setGroupName(menu.name, menu.restricted ? 'world' : 'client', section, true)
+        for (const setting of category.settings) setGroupName(setting.id, setting.name, setting.scope ?? 'client', section)
+        for (const menu of category.menus) setGroupName(menu.key, menu.name, menu.restricted ? 'world' : 'client', section)
     }
 }
 
 /**
+ * @param {string} id
  * @param {string} name
  * @param {'client' | 'world'} scope
  * @param {JQuery} section
- * @param {boolean} isSubmenu
  */
-function setGroupName(name, scope, section, isSubmenu) {
+function setGroupName(id, name, scope, section) {
     name = game.i18n.localize(name)
     const icon = scope === 'world' ? '🌎' : '👤'
-    const subQuery = isSubmenu ? '.submenu' : ':not(.submenu)'
-    const label = section.find(`.form-group${subQuery} > label:contains("${name}")`)
-    label.html(`<span title="${capitalize(scope)}">${icon}</span> ${name}`)
+    const label = section.find(`[name="${id}"], [data-key="${id}"]`).closest('.form-group').find('> label')
+    label.prepend(`<span title="${capitalize(scope)}">${icon}</span> `)
 }
