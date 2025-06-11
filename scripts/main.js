@@ -1,6 +1,7 @@
 /**
  * Icons were shamelessly stolen from the module 'DF Settings Clarity'
  * This module was created to replace it for v10 of Foundry VTT
+ * Compatybily with v13
  * https://github.com/flamewave000/dragonflagon-fvtt/tree/master/df-settings-clarity
  */
 
@@ -11,25 +12,45 @@ Hooks.on('renderSettingsConfig', onRenderSettingsConfig)
 /**
  * @param {SettingsConfig} _settings
  * @param {JQuery} html
- * @param {SettingsConfigData} data
  */
-function onRenderSettingsConfig(_settings, html, data) {
-    for (const category of data.categories) {
-        const section = html.find(`section.category[data-category="${category.id}"]`)
-        for (const setting of category.settings) setGroupName(setting.id, setting.name, setting.scope ?? 'client', section)
-        for (const menu of category.menus) setGroupName(menu.key, menu.name, menu.restricted ? 'world' : 'client', section)
-    }
+function onRenderSettingsConfig(_settings, htmlElement) {
+    const html = $(htmlElement);
+
+    html.find('.form-group').each((_, group) => {
+        const $group = $(group);
+
+        const input = $group.find('input[name], select[name], textarea[name]').first();
+        const button = $group.find('button[data-key]').first();
+
+        if (input.length) {
+            const id = input.attr('name');
+            const setting = game.settings.settings.get(id);
+            if (setting) {
+                const name = game.i18n.localize(setting.name);
+                const scope = setting.scope ?? 'client';
+                addScopeIcon($group, scope);
+            }
+        } else if (button.length) {
+            const key = button.data('key');
+            const menu = game.settings.menus.get(key);
+            if (menu) {
+                const name = game.i18n.localize(menu.name);
+                const scope = menu.restricted ? 'world' : 'client';
+                addScopeIcon($group, scope);
+            }
+        }
+    });
 }
 
 /**
- * @param {string} id
- * @param {string} name
+ * @param {JQuery} group - .form-group
  * @param {'client' | 'world'} scope
- * @param {JQuery} section
  */
-function setGroupName(id, name, scope, section) {
-    name = game.i18n.localize(name)
-    const icon = scope === 'world' ? '🌎' : '👤'
-    const label = section.find(`[name="${id}"], [data-key="${id}"]`).closest('.form-group').find('> label')
-    label.prepend(`<span title="${capitalize(scope)}">${icon}</span> `)
+function addScopeIcon(group, scope) {
+    const icon = scope === 'world' ? '🌎' : '👤';
+    const label = group.find('label').first();
+
+    if (label.length && !label.find('span[title]').length) {
+        label.prepend(`<span title="${capitalize(scope)}">${icon}</span> `);
+    }
 }
