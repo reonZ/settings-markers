@@ -33,7 +33,7 @@ function onRenderSettingsConfig(app, html, options) {
 
             icon.dataset.tooltip = scope.capitalize();
             icon.dataset.tooltipDirection = "UP";
-            icon.innerHTML = scope === "world" ? "🌎 " : "👤 ";
+            icon.innerHTML = scope === "world" ? "🌎 " : scope === "user" ? "👤 " : "💻 ";
 
             label?.prepend(icon);
         }
